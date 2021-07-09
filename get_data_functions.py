@@ -97,12 +97,12 @@ def pastRipcordTolerence():
 
 #See docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration
 
-def supplyCapWarningThreshold():
-  pass
+def ETHsupplyCapWarningThreshold():
+  return("CAUTION! ETH2x-FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-#CAUTION! <TOKEN>2x-FLI is at ##% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value. 
+def BTCsupplyCapWarningThreshold():
+  return("CAUTION! BTC2x-FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-#Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1
 
 def netAssetValueThreshold():
   #ATTENTION! There is currently a ##.#% premium on <TOKEN>2x-FLI compared to it’s net asset value. 
