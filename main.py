@@ -30,19 +30,24 @@ cursor = connection.cursor()
 
 def main():
   """
-  work?
+  main
   """
+  ETHgetCurrentSupply = getCurrentSupply(ETHFLI_TOKEN_ADDRESS)
+  ETHgetTotalSupply = getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)
+  BTCgetCurrentSupply = getCurrentSupply(BTCFLI_TOKEN_ADDRESS)
+  BTCgetTotalSupply = getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)
+  
   #If time == 9am twitter post supply
   if now > today9am and now < today905am:
     print(ETH_Supply())
     print(BTC_Supply())
   
   # if supply cap is at x% then twitter post
-  if round(getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100) >=90:
+  if round(ETHgetCurrentSupply/ETHgetTotalSupply*100) >=90:
     if now.hour % 6 == 0:
       print(ETHsupplyCapWarningThreshold())
     
-  if round(getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100) >=90:
+  if round(BTCgetCurrentSupply/BTCgetTotalSupply*100) >=90:
     if now.hour % 6 == 0:
       print(BTCsupplyCapWarningThreshold())
   
@@ -54,9 +59,9 @@ def main():
   rows = cursor.fetchall()
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
   # print(parameters_in_db)
-  if parameters_in_db[0] != getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS):
-    print(BTCmaxSupplyChange(parameters_in_db[0],getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS))) 
-    cursor.execute(f"UPDATE parameters SET maxSupply = {getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)} WHERE product_id = 2")
+  if parameters_in_db[0] != BTCgetTotalSupply:
+    print(BTCmaxSupplyChange(parameters_in_db[0],BTCgetTotalSupply))
+    cursor.execute(f"UPDATE parameters SET maxSupply = {BTCgetTotalSupply} WHERE product_id = 2")
     connection.commit()
   
   cursor.execute("""
@@ -66,13 +71,11 @@ def main():
   rows = cursor.fetchall()
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
   # print(parameters_in_db)
-  if parameters_in_db[0] != getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS):
-    print(ETHmaxSupplyChange(parameters_in_db[0],getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS))) 
-    cursor.execute(f"UPDATE parameters SET maxSupply = {getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)} WHERE product_id = 1")
+  if parameters_in_db[0] != ETHgetTotalSupply:
+    print(ETHmaxSupplyChange(parameters_in_db[0],ETHgetTotalSupply)) 
+    cursor.execute(f"UPDATE parameters SET maxSupply = {ETHgetTotalSupply} WHERE product_id = 1")
     connection.commit()
     
-
-  
   #compare current leverage ratio and if past ripcord threshold then twitter post
   if float(getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(ETHFLI_STRATEGY_ADAPTER_ADDRESS)):
     print(ETHpastRipcordTolerence()) 
@@ -80,7 +83,11 @@ def main():
   if float(getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(BTCFLI_STRATEGY_ADAPTER_ADDRESS)):
     print(BTCpastRipcordTolerence()) 
   
+  nav = 72
   #Tweet about net asset value disconnect
+  #or (100 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / nav) < - 2)
+  if abs((1 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / nav))) > 0.02:
+    print(ETHnetAssetValueThreshold())
   
 
 main()

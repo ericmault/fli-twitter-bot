@@ -105,9 +105,6 @@ def getMethodology(address):
   rebalanceInterval = execut[4]/60
   return(f' targetleverage -> {targetLeverageRatio} minLevRatio -> {minLeverageRatio}, maxLevRatio -> {maxLeverageRatio}, recentingspeed -> {recenteringSpeed} rebalance interbal -> {rebalanceInterval}')
     
-
-  
-  
 def getCurrentAndTotalSupply(address,address1):
   check = w3.toChecksumAddress(address)
   contract = w3.eth.contract(address=check, abi=getAbi(address))
@@ -135,6 +132,15 @@ def getTotalSupply(address):
   supply_cap = int(execut2/1000000000000000000)
 #   print(f'The current supply is {current_supply} out of a max of {supply_cap}')
   return(supply_cap)
+
+
+# uses coingecko API for prices
+def coinGeckoPriceData(token_id):
+  response = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={token_id}&vs_currencies=usd")
+  data3 = json.loads(response.text)
+  #print("$"+str(data3[f'{token_id}']['usd']))
+#   print(data3[f'{token_id}']['usd'])
+  return((data3[f'{token_id}']['usd']))
 
 def ETH_Supply():
   return("----- ETH2x-FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
