@@ -25,13 +25,13 @@ rows = cursor.fetchall()
 products_in_db = [row['name'] for row in rows] # list comprehension
 print(products_in_db)
 
-# cursor.execute("""
-#     SELECT maxSupply FROM parameters where product_id = 1
-# """)
+cursor.execute("""
+    SELECT maxSupply FROM parameters where product_id = 2
+""")
 
-# rows = cursor.fetchall()
-# parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
-# print(parameters_in_db)
+rows = cursor.fetchall()
+parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
+print(parameters_in_db)
 
 
 for i in products:

@@ -29,6 +29,9 @@ cursor = connection.cursor()
 #   pass
 
 def main():
+  """
+  work?
+  """
   #If time == 9am twitter post supply
   if now > today9am and now < today905am:
     print(ETH_Supply())
@@ -43,7 +46,19 @@ def main():
     if now.hour % 6 == 0:
       print(BTCsupplyCapWarningThreshold())
   
-  #pull latest max supply and compare to current max supply if not == then twitter post and update current max supply
+  #pull latest max supply and compare to current max supply if not == then twitter post and update current max supply  
+  cursor.execute("""
+    SELECT maxSupply FROM parameters where product_id=2
+""")
+
+  rows = cursor.fetchall()
+  parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
+  # print(parameters_in_db)
+  if parameters_in_db[0] != getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS):
+    print(BTCmaxSupplyChange(parameters_in_db[0],getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS))) 
+    cursor.execute(f"UPDATE parameters SET maxSupply = {getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)} WHERE product_id = 2")
+    connection.commit()
+  
   cursor.execute("""
     SELECT maxSupply FROM parameters where product_id=1
 """)
@@ -56,17 +71,7 @@ def main():
     cursor.execute(f"UPDATE parameters SET maxSupply = {getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)} WHERE product_id = 1")
     connection.commit()
     
-    cursor.execute("""
-    SELECT maxSupply FROM parameters where product_id=2
-""")
 
-  rows = cursor.fetchall()
-  parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
-  # print(parameters_in_db)
-  if parameters_in_db[0] != getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS):
-    print(BTCmaxSupplyChange(parameters_in_db[0],getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS))) 
-    cursor.execute(f"UPDATE parameters SET maxSupply = {getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)} WHERE product_id = 2")
-    connection.commit()
   
   #compare current leverage ratio and if past ripcord threshold then twitter post
   if float(getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(ETHFLI_STRATEGY_ADAPTER_ADDRESS)):
