@@ -39,7 +39,19 @@ def getCurrentLeverageRatio(address):
 #   print(f'the current leverage ratio is {leverageRatioRounded}')
   return(f'{leverageRatioRounded}')
 
-def getGetExecution(address):
+
+# struct ExecutionSettings { 
+#     uint256 unutilizedLeveragePercentage;            // Percent of max borrow left unutilized in precise units (1% = 10e16)
+#     uint256 twapMaxTradeSize;                        // Max trade size in collateral base units
+#     uint256 twapCooldownPeriod;                      // Cooldown period required since last trade timestamp in seconds
+#     uint256 slippageTolerance;                       // % in precise units to price min token receive amount from trade quantities
+#     string exchangeName;                             // Name of exchange that is being used for leverage
+#     bytes leverExchangeData;                         // Arbitrary exchange data passed into rebalance function for levering up
+#     bytes deleverExchangeData;                       // Arbitrary exchange data passed into rebalance function for delevering
+# }
+
+
+def getExecution(address):
   contract = w3.eth.contract(address=address, abi=getAbi(address))
   execut = contract.functions.getExecution().call()
   unutilizedLeveragePercent = int(execut[0]/1000000000000000000)
@@ -48,7 +60,53 @@ def getGetExecution(address):
   slippageAllowance = int(execut[3]/1000000000000000000)
   exchangeName = execut[4]
 #   print(f'This is unutilized leverage percentage {unutilizedLeveragePercent} and this is twapmaxtradesize {twapMaxTradeSize}, and here is cooldown {coolDownPeriod}, and here is slippage tolerence {slippageAllowance} and here is exchangeName {exchangeName}')
-  return(f'{execut}')
+  return(f'This is unutilized leverage percentage {unutilizedLeveragePercent} and this is twapmaxtradesize {twapMaxTradeSize}, and here is cooldown {coolDownPeriod}, and here is slippage tolerence {slippageAllowance} and here is exchangeName {exchangeName}')
+
+# struct IncentiveSettings {
+#     uint256 etherReward;                             // ETH reward for incentivized rebalances
+#     uint256 incentivizedLeverageRatio;               // Leverage ratio for incentivized rebalances
+#     uint256 incentivizedSlippageTolerance;           // Slippage tolerance percentage for incentivized rebalances
+#     uint256 incentivizedTwapCooldownPeriod;          // TWAP cooldown in seconds for incentivized rebalances
+#     uint256 incentivizedTwapMaxTradeSize;            // Max trade size for incentivized rebalances in collateral base units
+# }
+
+
+def getIncentive(address):
+    #currently just returning the incentivizedLeverageRatio
+
+  contract = w3.eth.contract(address=address, abi=getAbi(address))
+  execut = contract.functions.getIncentive().call()
+  etherReward = float(execut[0]*1e-18)
+  incentivizedLeverageRatio = float(execut[1]*1e-18)
+  incentivizedSlippageTolerance = float(execut[2]*1e-18)
+  incentivizedTwapCooldownPeriod = float(execut[3]*1e-18)
+  incentivizedTwapMaxTradeSize = float(execut[4]*1e-18)
+  #return(f'either reward {etherReward},{incentivizedLeverageRatio},{incentivizedSlippageTolerance},{incentivizedTwapMaxTradeSize}')
+  return(incentivizedLeverageRatio)
+  
+  
+#   struct MethodologySettings { 
+#     uint256 targetLeverageRatio;                     // Long term target ratio in precise units (10e18)
+#     uint256 minLeverageRatio;                        // In precise units (10e18). If current leverage is below, rebalance target is this ratio
+#     uint256 maxLeverageRatio;                        // In precise units (10e18). If current leverage is above, rebalance target is this ratio
+#     uint256 recenteringSpeed;                        // % at which to rebalance back to target leverage in precise units (10e18)
+#     uint256 rebalanceInterval;                       // Period of time required since last rebalance timestamp in seconds
+# }
+
+def getMethodology(address):
+  contract = w3.eth.contract(address=address, abi=getAbi(address))
+  execut = contract.functions.getMethodology().call()
+  #targetLeverageRatio = int(execut[0]/1000000000000000000)
+  targetLeverageRatio = float(execut[0]*1e-18)
+  minLeverageRatio = round(float(execut[1]*1e-18),2)
+  #'{0:.3g}'.format(num)
+  maxLeverageRatio = round(float(execut[2]*1e-18),2)
+  recenteringSpeed = round(float(execut[3]*1e-18),2)
+  rebalanceInterval = execut[4]/60
+  return(f' targetleverage -> {targetLeverageRatio} minLevRatio -> {minLeverageRatio}, maxLevRatio -> {maxLeverageRatio}, recentingspeed -> {recenteringSpeed} rebalance interbal -> {rebalanceInterval}')
+    
+
+  
   
 def getCurrentAndTotalSupply(address,address1):
   check = w3.toChecksumAddress(address)
@@ -84,18 +142,17 @@ def ETH_Supply():
 def BTC_Supply():
   return("----- BTC2x-FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
-def maxSupplyChange():
-  
-  #The max supply cap for <TOKEN>2x-FLI has been changed to ###### from #######
+def ETHmaxSupplyChange(old,new):
+  return(f"The max supply cap for ETH2x-FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
-  #Learn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates
-  pass
+def BTCmaxSupplyChange(old,new):
+  return(f"The max supply cap for BTC2x-FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
-def pastRipcordTolerence():
-  pass
-#<TOKEN>2x-FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward! 
+def ETHpastRipcordTolerence():
+    return("ETH2x-FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
-#See docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration
+def BTCpastRipcordTolerence():
+    return("BTC2x-FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
 def ETHsupplyCapWarningThreshold():
   return("CAUTION! ETH2x-FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
@@ -103,8 +160,8 @@ def ETHsupplyCapWarningThreshold():
 def BTCsupplyCapWarningThreshold():
   return("CAUTION! BTC2x-FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-
-def netAssetValueThreshold():
-  #ATTENTION! There is currently a ##.#% premium on <TOKEN>2x-FLI compared to it’s net asset value. 
-  pass
-  #Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1
+def ETHnetAssetValueThreshold():
+  return("ATTENTION! There is currently a ##.#% premium on ETH2x-FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  
+def BTCnetAssetValueThreshold():
+  return("ATTENTION! There is currently a ##.#% premium on BTC2x-FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")

@@ -25,6 +25,14 @@ rows = cursor.fetchall()
 products_in_db = [row['name'] for row in rows] # list comprehension
 print(products_in_db)
 
+# cursor.execute("""
+#     SELECT maxSupply FROM parameters where product_id = 1
+# """)
+
+# rows = cursor.fetchall()
+# parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
+# print(parameters_in_db)
+
 
 for i in products:
     try:
@@ -39,10 +47,10 @@ connection.commit()
 
 
 #insert ETH2x-FLI parameters
-cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, "Today",getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),getCurrentSupply(ETHFLI_TOKEN_ADDRESS),getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)))
+cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, dt_string,getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),getCurrentSupply(ETHFLI_TOKEN_ADDRESS),getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)))
 
 #insert BTC2x-FLI parameters
-cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, "Today",getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),getCurrentSupply(BTCFLI_TOKEN_ADDRESS),getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)))
+cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, dt_string,getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),getCurrentSupply(BTCFLI_TOKEN_ADDRESS),getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)))
 
 
 connection.commit()
