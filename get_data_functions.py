@@ -228,14 +228,14 @@ def BTCsupplyCapWarningThreshold():
     #need to update and take out funcation calls here
   return("CAUTION! BTC2x - $FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-def ETHnetAssetValueThreshold(premium):
+def ETHnetAssetValueThresholdPremium(premium):
   return(f"ATTENTION! There is currently a {premium}% premium on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
   
-def BTCnetAssetValueThreshold(premium):
+def BTCnetAssetValueThresholdPremium(premium):
   return(f"ATTENTION! There is currently a {premium}% premium on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-def ETHnetAssetValueThreshold(discount):
+def ETHnetAssetValueThresholdDiscount(discount):
   return(f"ATTENTION! There is currently a {discount}% discount on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
   
-def BTCnetAssetValueThreshold(premium):
+def BTCnetAssetValueThresholdDiscount(premium):
   return(f"ATTENTION! There is currently a {discount}% discount on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")

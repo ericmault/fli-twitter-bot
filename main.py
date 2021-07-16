@@ -26,6 +26,8 @@ cursor = connection.cursor()
 
 # class product():
     # todo create the products as a class and give the parameters as values
+    #create a product object everytime and use that instead of the fucntions below
+    #then just save that class object to the db
 #   pass
 
 def main():
@@ -105,10 +107,16 @@ def main():
   #              getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(ETHFLI_COINGECKO_ID))))) > 0.02:
   #             # getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
   if ethNAVDiff > 2.1:
-    print(ETHnetAssetValueThreshold(ethNAVDiff))
+    if ethCoinGeckoPrice > ethNAV:
+      print(ETHnetAssetValueThresholdPremium(ethNAVDiff))
+    else:
+      print(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
     
   if btcNAVDiff > 2.1:
-    print(BTCnetAssetValueThreshold(btcNAVDiff))
+    if btcCoinGeckoPrice > btcNAV:
+      print(BTCnetAssetValueThresholdPremium(btcNAVDiff))
+    else:
+      print(BTCnetAssetValueThresholdDiscount(btcNAVDiff))
   
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, dt_string,ETHgetTotalSupply,ETHgetCurrentSupply,ETHgetCurrentLeverageRatio))
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, dt_string,BTCgetTotalSupply,BTCgetCurrentSupply,BTCgetCurrentLeverageRatio))
