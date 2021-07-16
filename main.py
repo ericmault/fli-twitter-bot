@@ -34,8 +34,11 @@ def main():
   """
   ETHgetCurrentSupply = getCurrentSupply(ETHFLI_TOKEN_ADDRESS)
   ETHgetTotalSupply = getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)
+  ETHgetCurrentLeverageRatio = getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)
   BTCgetCurrentSupply = getCurrentSupply(BTCFLI_TOKEN_ADDRESS)
   BTCgetTotalSupply = getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)
+  BTCgetCurrentLeverageRatio = getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)
+  
   
   #If time == 9am twitter post supply
   if now > today9am and now < today905am:
@@ -54,41 +57,63 @@ def main():
   #pull latest max supply and compare to current max supply if not == then twitter post and update current max supply  
   cursor.execute("""
     SELECT maxSupply FROM parameters where product_id=2
-""")
+  """)
 
   rows = cursor.fetchall()
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
   # print(parameters_in_db)
-  if parameters_in_db[0] != BTCgetTotalSupply:
-    print(BTCmaxSupplyChange(parameters_in_db[0],BTCgetTotalSupply))
-    cursor.execute(f"UPDATE parameters SET maxSupply = {BTCgetTotalSupply} WHERE product_id = 2")
-    connection.commit()
+  if parameters_in_db[-1] != BTCgetTotalSupply:
+    print(BTCmaxSupplyChange(parameters_in_db[-1],BTCgetTotalSupply))
+    # cursor.execute(f"UPDATE parameters SET maxSupply = {BTCgetTotalSupply} WHERE product_id = 2")
+    # connection.commit()
   
   cursor.execute("""
     SELECT maxSupply FROM parameters where product_id=1
-""")
+  """)
 
   rows = cursor.fetchall()
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
-  # print(parameters_in_db)
-  if parameters_in_db[0] != ETHgetTotalSupply:
-    print(ETHmaxSupplyChange(parameters_in_db[0],ETHgetTotalSupply)) 
-    cursor.execute(f"UPDATE parameters SET maxSupply = {ETHgetTotalSupply} WHERE product_id = 1")
-    connection.commit()
+  if parameters_in_db[-1] != ETHgetTotalSupply:
+    print(ETHmaxSupplyChange(parameters_in_db[-1],ETHgetTotalSupply)) 
+    # cursor.execute(f"UPDATE parameters SET maxSupply = {ETHgetTotalSupply} WHERE product_id = 1")
+    # connection.commit()
     
   #compare current leverage ratio and if past ripcord threshold then twitter post
-  if float(getCurrentLeverageRatio(ETHFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(ETHFLI_STRATEGY_ADAPTER_ADDRESS)):
+  if float(ETHgetCurrentLeverageRatio) > float(getIncentive(ETHFLI_STRATEGY_ADAPTER_ADDRESS)):
     print(ETHpastRipcordTolerence()) 
   
   if float(getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(BTCFLI_STRATEGY_ADAPTER_ADDRESS)):
     print(BTCpastRipcordTolerence()) 
   
-  nav = 72
+  ethNAV = getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
+  ethCoinGeckoPrice = coinGeckoPriceData(ETHFLI_COINGECKO_ID)
+  ethNAVDiff = round(NAVDiff(ethNAV,ethCoinGeckoPrice),2)
+  btcNAV = getNetAssetValue(getTotalComponentsRealUnitsCWBTCToken(BTCFLI_TOKEN_ADDRESS,cWBTC_ADDR),getTotalComponentsRealUnitsUSDC(BTCFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cWBTC_COINGECKO_ID))
+  btcCoinGeckoPrice = coinGeckoPriceData(BTCFLI_COINGECKO_ID)
+  btcNAVDiff = round(NAVDiff(btcNAV,btcCoinGeckoPrice),2)
+  
+  
+  # print(ethNAV,ethCoinGeckoPrice)
+  # print('----')
+  # print(btcNAV,btcCoinGeckoPrice)
+  # print(ethNAVDiff)
+  
+  # nav = 72
   #Tweet about net asset value disconnect
   #or (100 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / nav) < - 2)
-  if abs((1 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / nav))) > 0.02:
-    print(ETHnetAssetValueThreshold())
+  # if abs((1 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / 
+  #              getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(ETHFLI_COINGECKO_ID))))) > 0.02:
+  #             # getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
+  if ethNAVDiff > 2.1:
+    print(ETHnetAssetValueThreshold(ethNAVDiff))
+    
+  if btcNAVDiff > 2.1:
+    print(BTCnetAssetValueThreshold(btcNAVDiff))
   
+  cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, dt_string,ETHgetTotalSupply,ETHgetCurrentSupply,ETHgetCurrentLeverageRatio))
+  cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, dt_string,BTCgetTotalSupply,BTCgetCurrentSupply,BTCgetCurrentLeverageRatio))
+
+  connection.commit()
 
 main()
 

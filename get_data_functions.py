@@ -142,32 +142,100 @@ def coinGeckoPriceData(token_id):
 #   print(data3[f'{token_id}']['usd'])
   return((data3[f'{token_id}']['usd']))
 
+def getTotalComponentsRealUnitsUSDC(fli_address,underlying_address):
+    check = w3.toChecksumAddress(fli_address)
+    contract2 = w3.eth.contract(address=fli_address, abi=getAbi(fli_address))
+    execut2 = contract2.functions.getTotalComponentRealUnits(underlying_address).call()
+    components = float(execut2*1e-6)
+    return(components)
+
+def getTotalComponentsRealUnitsCWBTCToken(fli_address,underlying_address):
+    check = w3.toChecksumAddress(fli_address)
+    contract2 = w3.eth.contract(address=fli_address, abi=getAbi(fli_address))
+    execut2 = contract2.functions.getTotalComponentRealUnits(underlying_address).call()
+    components = float(execut2*1e-8)
+    return(components)
+
+def getTotalComponentsRealUnitsCETHToken(fli_address,underlying_address):
+    check = w3.toChecksumAddress(fli_address)
+    contract2 = w3.eth.contract(address=fli_address, abi=getAbi(fli_address))
+    execut2 = contract2.functions.getTotalComponentRealUnits(underlying_address).call()
+    components = float(execut2*1e-8)
+    return(components)
+
+def getNetAssetValue(wrappedPosition, stableCoinPosition,price):
+    """
+    use stuff here
+    """
+    # print(f"wrappedpost {wrappedPosition}, stable pos {stableCoinPosition}, price {price}")
+    nav = wrappedPosition * price + stableCoinPosition
+    # print("nav below")
+    # print(nav)
+    return(nav)
+
+def NAVDiff(nav,price):
+    """
+    www.calculatorsoup.com/calculators/algebra/percent-difference-calculator.php
+    """
+    return((abs(nav-price)/(abs((nav+price)/2))*100))
+
+
+# print(coinGeckoPriceData(cETH_COINGECKO_ID))
+# print(getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR))
+# print(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR))
+# print(getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID)))
+# print(coinGeckoPriceData(ETHFLI_COINGECKO_ID))
+
+# navTest = getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
+# priceTest = coinGeckoPriceData(ETHFLI_COINGECKO_ID)
+
+# print((navTest))
+# print((priceTest))
+# print(abs(navTest-priceTest)/(abs((navTest+priceTest)/2))*100)
+# print('------')
+
+# print(coinGeckoPriceData(cWBTC_COINGECKO_ID))
+# print(getTotalComponentsRealUnitsUSDC(BTCFLI_TOKEN_ADDRESS,UDSC_ADDR))
+# print(getTotalComponentsRealUnitsCWBTCToken(BTCFLI_TOKEN_ADDRESS,cWBTC_ADDR))
+# getNetAssetValue(getTotalComponentsRealUnitsCWBTCToken(BTCFLI_TOKEN_ADDRESS,cWBTC_ADDR),getTotalComponentsRealUnitsUSDC(BTCFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cWBTC_COINGECKO_ID))
+
+
 def ETH_Supply():
-  return("----- ETH2x-FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+    #need to update and take out funcation calls here
+  return("----- ETH2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def BTC_Supply():
-  return("----- BTC2x-FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+    #need to update and take out funcation calls here
+  return("----- BTC2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def ETHmaxSupplyChange(old,new):
-  return(f"The max supply cap for ETH2x-FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return(f"The max supply cap for ETH2x - $FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def BTCmaxSupplyChange(old,new):
-  return(f"The max supply cap for BTC2x-FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return(f"The max supply cap for BTC2x - $FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def ETHpastRipcordTolerence():
-    return("ETH2x-FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
+    return("ETH2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
 def BTCpastRipcordTolerence():
-    return("BTC2x-FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
+    return("BTC2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
 def ETHsupplyCapWarningThreshold():
-  return("CAUTION! ETH2x-FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+    #need to update and take out funcation calls here
+  return("CAUTION! ETH2x - $FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
 def BTCsupplyCapWarningThreshold():
-  return("CAUTION! BTC2x-FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+    #need to update and take out funcation calls here
+  return("CAUTION! BTC2x - $FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
-def ETHnetAssetValueThreshold():
-  return("ATTENTION! There is currently a ##.#% premium on ETH2x-FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+def ETHnetAssetValueThreshold(premium):
+  return(f"ATTENTION! There is currently a {premium}% premium on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
   
-def BTCnetAssetValueThreshold():
-  return("ATTENTION! There is currently a ##.#% premium on BTC2x-FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+def BTCnetAssetValueThreshold(premium):
+  return(f"ATTENTION! There is currently a {premium}% premium on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+
+def ETHnetAssetValueThreshold(discount):
+  return(f"ATTENTION! There is currently a {discount}% discount on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  
+def BTCnetAssetValueThreshold(premium):
+  return(f"ATTENTION! There is currently a {discount}% discount on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
