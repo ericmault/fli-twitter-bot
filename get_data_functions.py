@@ -202,11 +202,11 @@ def NAVDiff(nav,price):
 
 def ETH_Supply():
     #need to update and take out funcation calls here
-  return("----- ETH2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return("----- ETH2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
 
 def BTC_Supply():
     #need to update and take out funcation calls here
-  return("----- BTC2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return("----- BTC2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
 
 def ETHmaxSupplyChange(old,new):
   return(f"The max supply cap for ETH2x - $FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")

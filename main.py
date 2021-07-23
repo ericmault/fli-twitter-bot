@@ -41,20 +41,22 @@ def main():
   BTCgetTotalSupply = getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)
   BTCgetCurrentLeverageRatio = getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)
   
+  #uncomment to test tweet  
+  # api.update_status(ETH_Supply())
   
   #If time == 9am twitter post supply
   if now > today9am and now < today905am:
-    print(ETH_Supply())
-    print(BTC_Supply())
+    api.update_status(ETH_Supply())
+    api.update_status(BTC_Supply())
   
   # if supply cap is at x% then twitter post
   if round(ETHgetCurrentSupply/ETHgetTotalSupply*100) >=90:
     if now.hour % 6 == 0:
-      print(ETHsupplyCapWarningThreshold())
+      api.update_status(ETHsupplyCapWarningThreshold())
     
   if round(BTCgetCurrentSupply/BTCgetTotalSupply*100) >=90:
     if now.hour % 6 == 0:
-      print(BTCsupplyCapWarningThreshold())
+      api.update_status(BTCsupplyCapWarningThreshold())
   
   #pull latest max supply and compare to current max supply if not == then twitter post and update current max supply  
   cursor.execute("""
@@ -65,7 +67,7 @@ def main():
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
   # print(parameters_in_db)
   if parameters_in_db[-1] != BTCgetTotalSupply:
-    print(BTCmaxSupplyChange(parameters_in_db[-1],BTCgetTotalSupply))
+    api.update_status(BTCmaxSupplyChange(parameters_in_db[-1],BTCgetTotalSupply))
     # cursor.execute(f"UPDATE parameters SET maxSupply = {BTCgetTotalSupply} WHERE product_id = 2")
     # connection.commit()
   
@@ -76,16 +78,16 @@ def main():
   rows = cursor.fetchall()
   parameters_in_db = [row['maxSupply'] for row in rows] # list comprehension
   if parameters_in_db[-1] != ETHgetTotalSupply:
-    print(ETHmaxSupplyChange(parameters_in_db[-1],ETHgetTotalSupply)) 
+    api.update_status(ETHmaxSupplyChange(parameters_in_db[-1],ETHgetTotalSupply)) 
     # cursor.execute(f"UPDATE parameters SET maxSupply = {ETHgetTotalSupply} WHERE product_id = 1")
     # connection.commit()
     
   #compare current leverage ratio and if past ripcord threshold then twitter post
   if float(ETHgetCurrentLeverageRatio) > float(getIncentive(ETHFLI_STRATEGY_ADAPTER_ADDRESS)):
-    print(ETHpastRipcordTolerence()) 
+    api.update_status(ETHpastRipcordTolerence()) 
   
   if float(getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)) > float(getIncentive(BTCFLI_STRATEGY_ADAPTER_ADDRESS)):
-    print(BTCpastRipcordTolerence()) 
+    api.update_status(BTCpastRipcordTolerence()) 
   
   ethNAV = getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
   ethCoinGeckoPrice = coinGeckoPriceData(ETHFLI_COINGECKO_ID)
@@ -108,15 +110,15 @@ def main():
   #             # getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
   if ethNAVDiff > 2.1:
     if ethCoinGeckoPrice > ethNAV:
-      print(ETHnetAssetValueThresholdPremium(ethNAVDiff))
+      api.update_status(ETHnetAssetValueThresholdPremium(ethNAVDiff))
     else:
-      print(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
+      api.update_status(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
     
   if btcNAVDiff > 2.1:
     if btcCoinGeckoPrice > btcNAV:
-      print(BTCnetAssetValueThresholdPremium(btcNAVDiff))
+      api.update_status(BTCnetAssetValueThresholdPremium(btcNAVDiff))
     else:
-      print(BTCnetAssetValueThresholdDiscount(btcNAVDiff))
+      api.update_status(BTCnetAssetValueThresholdDiscount(btcNAVDiff))
   
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, dt_string,ETHgetTotalSupply,ETHgetCurrentSupply,ETHgetCurrentLeverageRatio))
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, dt_string,BTCgetTotalSupply,BTCgetCurrentSupply,BTCgetCurrentLeverageRatio))
