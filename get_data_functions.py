@@ -73,14 +73,14 @@ def getExecution(address):
 
 def getIncentive(address):
     #currently just returning the incentivizedLeverageRatio
-
+    #
   contract = w3.eth.contract(address=address, abi=getAbi(address))
   execut = contract.functions.getIncentive().call()
   etherReward = float(execut[0]*1e-18)
   incentivizedLeverageRatio = float(execut[1]*1e-18)
   incentivizedSlippageTolerance = float(execut[2]*1e-18)
   incentivizedTwapCooldownPeriod = float(execut[3]*1e-18)
-  incentivizedTwapMaxTradeSize = float(execut[4]*1e-18)
+  # incentivizedTwapMaxTradeSize = float(execut[4]*1e-18)
   #return(f'either reward {etherReward},{incentivizedLeverageRatio},{incentivizedSlippageTolerance},{incentivizedTwapMaxTradeSize}')
   return(incentivizedLeverageRatio)
   
