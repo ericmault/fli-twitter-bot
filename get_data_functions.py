@@ -112,8 +112,8 @@ def getCurrentAndTotalSupply(address,address1):
   contract2 = w3.eth.contract(address=address1, abi=getAbi(address1))
   execut = contract.functions.totalSupply().call()
   execut2 = contract2.functions.supplyCap().call()
-  current_supply = int(execut/1000000000000000000)
-  supply_cap = int(execut2/1000000000000000000)
+  current_supply = format(int(execut/1000000000000000000),',d')
+  supply_cap = format(int(execut2/1000000000000000000),',d')
 #   print(f'The current supply is {current_supply} out of a max of {supply_cap}')
   return(f'{current_supply} / {supply_cap}')
 
@@ -202,40 +202,40 @@ def NAVDiff(nav,price):
 
 def ETH_Supply():
     #need to update and take out funcation calls here
-  return("----- ETH2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(ETHFLI_TOKEN_ADDRESS,ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
+  return("🤖 ETH2x - $FLI BOT 🤖\nCurrent Supply "+ str(format(getCurrentSupply(ETHFLI_TOKEN_ADDRESS),',d'))+ "\nMax Supply "+ str(format(getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),',d')) + "\nCurrently at ~" +str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\n\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
 
 def BTC_Supply():
     #need to update and take out funcation calls here
-  return("----- BTC2x - $FLI -----\nCurrent Supply / Max Supply -> "+ getCurrentAndTotalSupply(BTCFLI_TOKEN_ADDRESS,BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)+ "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
+  return("🤖 BTC2x - $FLI BOT 🤖\nCurrent Supply "+ str(format(getCurrentSupply(BTCFLI_TOKEN_ADDRESS),',d'))+ "\nMax Supply "+ str(format(getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS),',d')) + "\nCurrently at ~" +str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of max supply\n\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/our-products/flexible-leverage-indices/fli-technical-documentation/fli-product-parameters")
 
 def ETHmaxSupplyChange(old,new):
-  return(f"The max supply cap for ETH2x - $FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return(f"🤖 The max supply cap for ETH2x - $FLI has been changed to {new:,} from {old:,}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def BTCmaxSupplyChange(old,new):
-  return(f"The max supply cap for BTC2x - $FLI has been changed to {new} from {old}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
+  return(f"🤖 The max supply cap for BTC2x - $FLI has been changed to {new:,} from {old:,}\nLearn more about the supply cap and why it is important here: https://docs.indexcoop.com/community/governance/fli-strategy-parameter-updates")
 
 def ETHpastRipcordTolerence():
-    return("ETH2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
+    return("🤖 ETH2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
 def BTCpastRipcordTolerence():
-    return("BTC2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
+    return("🤖 BTC2x - $FLI has fallen outside of its leverage tolerance, anyone can rebalance immediately for reward!\nSee docs here: https://docs.indexcoop.com/resources-beta/technical-overview/fli-technical-documentation/fli-keeper-bot-integration ")
 
 def ETHsupplyCapWarningThreshold():
     #need to update and take out funcation calls here
-  return("CAUTION! ETH2x - $FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return("🤖 CAUTION! ETH2x - $FLI is at "+str(round((getCurrentSupply(ETHFLI_TOKEN_ADDRESS)/getTotalSupply(ETHFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
 def BTCsupplyCapWarningThreshold():
     #need to update and take out funcation calls here
-  return("CAUTION! BTC2x - $FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return("🤖 CAUTION! BTC2x - $FLI is at "+str(round((getCurrentSupply(BTCFLI_TOKEN_ADDRESS)/getTotalSupply(BTCFLI_SUPPLY_CAP_ISSUANCE_ADDRESS)*100)))+"% of it’s supply cap. When Supply cap is reached there can be a disconnect from net asset value and traded value.\n Read more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
 def ETHnetAssetValueThresholdPremium(premium):
-  return(f"ATTENTION! There is currently a {premium}% premium on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return(f"🤖 ATTENTION! There is currently a {premium}% premium on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
   
 def BTCnetAssetValueThresholdPremium(premium):
-  return(f"ATTENTION! There is currently a {premium}% premium on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return(f"🤖 ATTENTION! There is currently a {premium}% premium on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
 
 def ETHnetAssetValueThresholdDiscount(discount):
-  return(f"ATTENTION! There is currently a {discount}% discount on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return(f"🤖 ATTENTION! There is currently a {discount}% discount on ETH2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
   
 def BTCnetAssetValueThresholdDiscount(premium):
-  return(f"ATTENTION! There is currently a {discount}% discount on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
+  return(f"🤖 ATTENTION! There is currently a {discount}% discount on BTC2x - $FLI compared to it’s net asset value.\nRead more here: https://medium.com/indexcoop/understanding-the-eth2x-fli-premium-4ac8c5f6faa1")
