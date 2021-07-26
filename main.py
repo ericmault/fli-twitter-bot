@@ -14,8 +14,9 @@ print(f'Connected to Web3? {w3.isConnected()}')
 print(f'Current eth blocknumber -> {w3.eth.blockNumber}')
 
 now = datetime.now()
-today9am = now.replace(hour=9, minute=0, second=0, microsecond=0)
-today905am = now.replace(hour=9, minute=5, second=0, microsecond=0)
+#var below says 9 but has hours for 7 because of timechange from server location to eastcoast
+today9am = now.replace(hour=14, minute=0, second=0, microsecond=0)
+today905am = now.replace(hour=14, minute=5, second=0, microsecond=0)
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 print("current date and time -> ", dt_string) 
 
@@ -42,7 +43,7 @@ def main():
   BTCgetCurrentLeverageRatio = getCurrentLeverageRatio(BTCFLI_STRATEGY_ADAPTER_ADDRESS)
   
   #uncomment to test tweet  
-  # api.update_status(ETH_Supply())
+  #api.update_status(ETH_Supply())
   
   #If time == 9am twitter post supply
   if now > today9am and now < today905am:
@@ -96,7 +97,9 @@ def main():
   btcCoinGeckoPrice = coinGeckoPriceData(BTCFLI_COINGECKO_ID)
   btcNAVDiff = round(NAVDiff(btcNAV,btcCoinGeckoPrice),2)
   
-  
+  print(f"EthNav {ethNAV}, Coingeckoprice {ethCoinGeckoPrice}, diff {ethNAVDiff}")
+  print(f"BtcNav {btcNAV}, btcCoinGeckoPrice {btcCoinGeckoPrice}, diff {btcNAVDiff}")
+
   # print(ethNAV,ethCoinGeckoPrice)
   # print('----')
   # print(btcNAV,btcCoinGeckoPrice)
