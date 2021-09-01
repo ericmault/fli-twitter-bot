@@ -111,17 +111,17 @@ def main():
   # if abs((1 - (coinGeckoPriceData(ETHFLI_COINGECKO_ID) / 
   #              getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(ETHFLI_COINGECKO_ID))))) > 0.02:
   #             # getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
-  if ethNAVDiff > 2.1:
-    if ethCoinGeckoPrice > ethNAV:
-      api.update_status(ETHnetAssetValueThresholdPremium(ethNAVDiff))
-    else:
-      api.update_status(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
+  #if ethNAVDiff > 2.1:
+  #  if ethCoinGeckoPrice > ethNAV:
+  #    api.update_status(ETHnetAssetValueThresholdPremium(ethNAVDiff))
+  #  else:
+  #    api.update_status(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
     
-  if btcNAVDiff > 2.1:
-    if btcCoinGeckoPrice > btcNAV:
-      api.update_status(BTCnetAssetValueThresholdPremium(btcNAVDiff))
-    else:
-      api.update_status(BTCnetAssetValueThresholdDiscount(btcNAVDiff))
+ #if btcNAVDiff > 2.1:
+ #  if btcCoinGeckoPrice > btcNAV:
+ #     api.update_status(BTCnetAssetValueThresholdPremium(btcNAVDiff))
+ #   else:
+ #     api.update_status(BTCnetAssetValueThresholdDiscount(btcNAVDiff))
   
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(1, dt_string,ETHgetTotalSupply,ETHgetCurrentSupply,ETHgetCurrentLeverageRatio))
   cursor.execute("INSERT INTO parameters (product_id, date, maxSupply, currentSupply, currentLeverageRatio) VALUES (?,?,?,?,?)",(2, dt_string,BTCgetTotalSupply,BTCgetCurrentSupply,BTCgetCurrentLeverageRatio))
