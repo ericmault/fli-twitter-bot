@@ -107,6 +107,7 @@ def main():
   # print(nav_in_db[-1])
   # if nav_in_db[-1] != BTCgetTotalSupply:
   previousEthNav = nav_in_db[-1]
+  prevPrevEthNav = nav_in_db[-2]
   
   #grabbing previous BTCFLI nav
   cursor.execute("""
@@ -118,6 +119,7 @@ def main():
   # print(nav_in_db[-1])
   # if nav_in_db[-1] != BTCgetTotalSupply:
   previousBTCNav = nav_in_db[-1]
+  prevPreviousBTCNav = nav_in_db[-2]
   
   print(f"EthNav {ethNAV}, Coingeckoprice {ethCoinGeckoPrice}, diff {ethNAVDiff}")
   print(f"BtcNav {btcNAV}, btcCoinGeckoPrice {btcCoinGeckoPrice}, diff {btcNAVDiff}")
@@ -134,13 +136,13 @@ def main():
 #                getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(ETHFLI_COINGECKO_ID))))) > 0.02:
 #               # getNetAssetValue(getTotalComponentsRealUnitsCETHToken(ETHFLI_TOKEN_ADDRESS,cETH_ADDR),getTotalComponentsRealUnitsUSDC(ETHFLI_TOKEN_ADDRESS,UDSC_ADDR),coinGeckoPriceData(cETH_COINGECKO_ID))
   
-  if ethNAVDiff > 2.1 and previousEthNav > 2.1:
+  if ethNAVDiff > 2.1 and previousEthNav > 2.1 and prevPrevEthNav >2.1:
    if ethCoinGeckoPrice > ethNAV:
      api.update_status(ETHnetAssetValueThresholdPremium(ethNAVDiff))
    else:
      api.update_status(ETHnetAssetValueThresholdDiscount(ethNAVDiff))
     
-  if btcNAVDiff > 2.1 and previousBTCNav > 2.1:
+  if btcNAVDiff > 2.1 and previousBTCNav > 2.1 and prevPreviousBTCNav >2.1:
     if btcCoinGeckoPrice > btcNAV:
       api.update_status(BTCnetAssetValueThresholdPremium(btcNAVDiff))
     else:
